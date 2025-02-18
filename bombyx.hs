@@ -12,13 +12,13 @@ import System.Environment
 
 -- Takes argv as doubles and returns list of values. Could be a comprehension list.
 population :: [Double] -> [Double]
-population (n:k:_) = undefined
+population (n:k:_) = iterate (\xi -> k * xi * (1000 - xi) / 1000) n
 population _ = error "Given arguments can not provide population."
 
 -- Takes list of values and put them into a formatted string.
 displayPop :: Int -> [Double] -> String
 displayPop i t 
-        | i > 0   = undefined ++ displayPop (i - 1) t
+        | i > 0   = displayPop (i - 1) t ++ (show i) ++ " " ++ (show $ t !! i) ++ "\n"
         | otherwise = ""
 
 main :: IO()
