@@ -12,7 +12,7 @@ import System.Environment
 
 -- Takes argv as doubles and returns list of values. Could be a comprehension list.
 population :: [Double] -> [Double]
-population (n:k:_) = iterate (\xi -> k * xi * (1000 - xi) / 1000) n
+population (n:k:_) = n : iterate (\xi -> k * xi * (1000 - xi) / 1000) n
 population _ = error "Given arguments can not provide population."
 
 -- Takes list of values and put them into a formatted string.
@@ -24,4 +24,4 @@ displayPop i t
 main :: IO()
 main = do
     a <- getArgs
-    putStrLn $ (displayPop 100) $ population $ map read a
+    putStrLn $ init . (displayPop 100) $ population $ map read a
