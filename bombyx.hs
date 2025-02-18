@@ -9,6 +9,7 @@ module Main where
 
 import System.Exit
 import System.Environment
+import Data.Maybe
 
 -- Takes argv as doubles and returns list of values. Could be a comprehension list.
 population :: [Double] -> [Double]
@@ -22,14 +23,16 @@ displayPop i t
         | otherwise = ""
 
 -- Do something different based on whether ac == 2 or 3.
-actlen :: [Double] -> String
+actlen :: [Double] -> Maybe String
 actlen t
-    | l == 2 = init . (displayPop 100) $ population t
-    | l == 3 = undefined
-    | otherwise = error "Incorrect number of arguments."
+    | l == 2 = Just $ init . (displayPop 100) $ population t
+    | l == 3 = Just $ undefined
+    | otherwise = Nothing
     where l = length t;
 
 main :: IO()
 main = do
     a <- getArgs
-    putStrLn $ actlen $ map read a
+    case actlen $ map read a of
+        Nothing -> exitWith (ExitFailure 84)
+        a -> putStrLn $ fromJust a
