@@ -10,6 +10,7 @@ module Main where
 import System.Exit
 import System.Environment
 import Data.Maybe
+import Text.Read (readMaybe)
 
 -- Takes argv as doubles and returns list of values. Could be a comprehension list.
 population :: [Double] -> [Double]
@@ -30,9 +31,14 @@ actlen t
     | otherwise = Nothing
     where l = length t;
 
+-- If there's a list in a Just, returns that list. Else, returns an empty list. 
+verifyMaybe :: Eq a => Maybe [a] -> [a]
+verifyMaybe Nothing = []
+verifyMaybe x = fromJust x
+
 main :: IO()
 main = do
     a <- getArgs
-    case actlen $ map read a of
+    case actlen . verifyMaybe . sequenceA $ map readMaybe a of
         Nothing -> exitWith (ExitFailure 84)
         a -> putStrLn $ fromJust a
