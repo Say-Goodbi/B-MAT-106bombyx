@@ -11,6 +11,7 @@ import System.Exit
 import System.Environment
 import Data.Maybe
 import Text.Read (readMaybe)
+import Numeric
 
 -- Takes argv as doubles and returns list of values. Could be a comprehension list.
 population :: [Double] -> [Double]
@@ -20,7 +21,7 @@ population _        = error "Given arguments can not provide population."
 -- Takes list of values and put them into a formatted string.
 displayPop :: Int -> [Double] -> String
 displayPop i t
-        | i > 0 = displayPop (i - 1) t ++ (show i) ++ " " ++ (show $ t !! i) ++ "\n"
+        | i > 0 = displayPop (i - 1) t ++ (show i) ++ " " ++ (showFFloat (Just 2) (t !! i) "") ++ "\n"
         | otherwise = ""
 
 -- Do something different based on whether ac == 2 or 3.
