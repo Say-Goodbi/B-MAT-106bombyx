@@ -14,23 +14,24 @@ import Text.Read (readMaybe)
 import Numeric
 
 -- Takes argv as doubles and returns list of values. Could be a comprehension list.
-population :: [Double] -> [Double]
-population (n:k:_)  = n : iterate (\xi -> k * xi * (1000 - xi) / 1000) n
-population _        = error "Given arguments can not provide population."
+pop :: [Double] -> [Double]
+pop (n:k:_)  = n : iterate (\xi -> k * xi * (1000 - xi) / 1000) n
+pop _        = error "Given arguments can not provide population."
 
 -- Takes list of values and put them into a formatted string.
 displayPop :: Int -> [Double] -> [String]
 displayPop i t
-        | i > 0 = displayPop (i - 1) t ++ [unwords [show i, (showFFloat (Just 2) (t !! i) "")]]
-        | otherwise = []
+    | i > 0 = displayPop (i - 1) t ++ [unwords [show i, (showFFloat (Just 2) (t !! i) "")]]
+    | otherwise = []
 
 -- Do something different based on whether ac == 2 or 3.
 actlen :: [Double] -> Maybe String
 actlen t
-    | l == 2 = Just $ init . unlines . (displayPop 100) $ population t
+    | l == 2 && k = Just $ init . unlines . (displayPop 100) $ pop t
     | l == 3 = Just $ undefined
     | otherwise = Nothing
     where l = length t;
+          k = t !! 1 >= 1 && t !! 1 <= 4;
 
 -- If there's a list in a Just, returns that list. Else, returns an empty list. 
 verifyMaybe :: Eq a => Maybe [a] -> [a]
