@@ -9,6 +9,7 @@ module Main where
 
 import System.Exit
 import System.Environment
+import Control.Monad
 import Data.Maybe
 import Text.Read (readMaybe)
 import Numeric
@@ -23,14 +24,19 @@ displayPop :: Int -> [Double] -> [String]
 displayPop i t
     | i > 0 = displayPop (i - 1) t ++ [unwords [show i, (showFFloat (Just 2) (t !! i) "")]]
     | otherwise = []
+{-
+printH :: [Double] -> Maybe String
+printH _ = Just $ readFile "help.txt"
+-}
 
 -- Do something different based on whether ac == 2 or 3.
 actlen :: [Double] -> Maybe String
 actlen t
-    | l == 2 && k = Just $ init . unlines . (displayPop 100) $ pop t
-    | l == 3 = Just $ undefined
+    | l == 2 && n > 0 && k = Just $ init . unlines . (displayPop 100) $ pop t
+    | l == 3 && n > 0 = Just $ undefined
     | otherwise = Nothing
     where l = length t;
+          n = t !! 0;
           k = t !! 1 >= 1 && t !! 1 <= 4;
 
 -- If there's a list in a Just, returns that list. Else, returns an empty list. 
