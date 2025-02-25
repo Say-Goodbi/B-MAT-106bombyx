@@ -16,12 +16,11 @@ import Numeric
 
 showDouble :: Double -> String
 showDouble x = showFFloat (Just 2) x ""
--- Takes argv as doubles and returns list of values. Could be a comprehension list.
+
 pop :: [Double] -> [Double]
 pop (n:k:_)  = n : iterate (\xi -> k * xi * (1000 - xi) / 1000) n
 pop _        = error "Given arguments can not provide population."
 
--- Takes list of values and put them into a formatted string.
 displayPop :: Int -> [Double] -> [String]
 displayPop i t
     | i > 0 = displayPop (i - 1) t ++ [unwords [show i, (showDouble (t !! i))]]
@@ -45,18 +44,16 @@ displayZip :: [(Double, Double)] -> [String]
 displayZip [] = []
 displayZip ((a, b):s) = [unwords $ map showDouble [a, b]] ++ displayZip s
 
--- Do something different based on whether ac == 2 or 3.
-actlen :: [Double] -> Maybe String
+actlen :: [Double] -> Maybe [String]
 actlen t
-    | l == 2 && pos && k = Just $ init . unlines . (displayPop 100) $ pop t
-    | l == 3 && pos = Just $ init . unlines . displayZip $ synthScheme 1 t
+    | l == 2 && pos && k = Just $ (displayPop 100) $ pop t
+    | l == 3 && pos = Just $ displayZip $ synthScheme 1 t
     | otherwise = Nothing
     where l = length t;
           n = t !! 0;
           pos = all (> 0) t;
           k = (\x -> (x >= 1) && (x <= 4)) $ t !! 1 ;
 
--- If there's a list in a Just, returns that list. Else, returns an empty list. 
 verifyMaybe :: Eq a => Maybe [a] -> [a]
 verifyMaybe Nothing = []
 verifyMaybe x = fromJust x
@@ -66,4 +63,4 @@ main = do
     a <- getArgs
     case actlen . verifyMaybe . sequenceA $ map readMaybe a of
         Nothing -> exitWith (ExitFailure 84)
-        a -> putStrLn $ fromJust a
+        a -> putStrLn $ init . unlines $ fromJust a
